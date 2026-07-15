@@ -1,15 +1,18 @@
 package com.example.globalnews.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.globalnews.domain.model.Article
-import com.example.globalnews.domain.repository.NewsRepository
+import com.example.globalnews.domain.usecase.NewsUseCases
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import com.example.globalnews.util.sortAndPrioritize
+import javax.inject.Inject
 
-class NewsViewModel(private val repository: NewsRepository) : ViewModel() {
+@HiltViewModel
+class NewsViewModel @Inject constructor(
+    private val useCases: NewsUseCases
+) : ViewModel() {
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
@@ -19,7 +22,7 @@ class NewsViewModel(private val repository: NewsRepository) : ViewModel() {
     private val _selectedCategory = MutableStateFlow("technology")
     val selectedCategory: StateFlow<String> = _selectedCategory.asStateFlow()
 
-    val searchArticles: Flow<List<Article>> = repository.allArticles
+    val searchArticles: Flow<List<Article>> = useCases.getSearchArticles()
     val isLoading = MutableStateFlow(false)
 
     private val _searchCurrentPage = MutableStateFlow(1)
@@ -40,13 +43,7 @@ class NewsViewModel(private val repository: NewsRepository) : ViewModel() {
         _searchCurrentPage.value = page
         viewModelScope.launch {
             isLoading.value = true
-            val query = _searchQuery.value.trim()
-
-            if (query.isEmpty()) {
-                repository.refreshTopHeadlines(page = page)
-            } else {
-                repository.refreshSearchNews(query = query, page = page)
-            }
+            useCases.refreshSearchNews(query = _searchQuery.value.trim(), page = page)
             isLoading.value = false
         }
     }
@@ -55,14 +52,14 @@ class NewsViewModel(private val repository: NewsRepository) : ViewModel() {
         _categoryCurrentPage.value = page
         viewModelScope.launch {
             isLoading.value = true
-            repository.refreshCategoryNews(category = _selectedCategory.value, page = page)
+            useCases.refreshCategoryNews(category = _selectedCategory.value, page = page)
             isLoading.value = false
         }
     }
 
     fun getArticlesByCategory(category: String): Flow<List<Article>> {
-        return repository.getArticlesByCategory(category).combine(_sortBy) { articles, sortOrder ->
-            articles.sortAndPrioritize(sortOrder)
+        return _sortBy.flatMapLatest { sortOrder ->
+            useCases.getSortedCategoryArticles(category, sortOrder)
         }
     }
 
@@ -73,15 +70,5 @@ class NewsViewModel(private val repository: NewsRepository) : ViewModel() {
 
     fun changeSortOrder(order: String) {
         _sortBy.value = order
-    }
-}
-
-class NewsViewModelFactory(private val repository: NewsRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(NewsViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return NewsViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknown viewmodel class")
     }
 }
