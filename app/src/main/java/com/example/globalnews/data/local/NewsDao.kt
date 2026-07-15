@@ -1,7 +1,7 @@
 package com.example.globalnews.data.local
 
 import androidx.room.*
-import com.example.globalnews.data.model.Article
+import com.example.globalnews.domain.model.Article
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -3,8 +3,8 @@ package com.example.globalnews.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.globalnews.data.model.Article
-import com.example.globalnews.data.repository.NewsRepository
+import com.example.globalnews.domain.model.Article
+import com.example.globalnews.domain.repository.NewsRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import com.example.globalnews.util.sortAndPrioritize

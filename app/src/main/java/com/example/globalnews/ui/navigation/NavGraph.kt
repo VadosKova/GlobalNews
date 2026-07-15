@@ -4,7 +4,7 @@ import androidx.compose.runtime.*
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.globalnews.data.model.Article
+import com.example.globalnews.domain.model.Article
 import com.example.globalnews.ui.screens.ArticleDetailScreen
 import com.example.globalnews.ui.screens.CategoryScreen
 import com.example.globalnews.ui.screens.HomeScreen

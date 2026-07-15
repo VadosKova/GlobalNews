@@ -20,7 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.*
 import coil.compose.AsyncImage
-import com.example.globalnews.data.model.Article
+import com.example.globalnews.domain.model.Article
 import androidx.core.net.toUri
 
 @OptIn(ExperimentalMaterial3Api::class)

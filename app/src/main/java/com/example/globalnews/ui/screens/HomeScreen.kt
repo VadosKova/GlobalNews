@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.*
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.globalnews.data.model.Article
+import com.example.globalnews.domain.model.Article
 import com.example.globalnews.ui.viewmodel.NewsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
