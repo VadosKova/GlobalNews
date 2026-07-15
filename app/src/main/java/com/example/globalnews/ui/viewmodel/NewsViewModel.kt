@@ -23,7 +23,9 @@ class NewsViewModel @Inject constructor(
     val selectedCategory: StateFlow<String> = _selectedCategory.asStateFlow()
 
     val searchArticles: Flow<List<Article>> = useCases.getSearchArticles()
-    val isLoading = MutableStateFlow(false)
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     private val _searchCurrentPage = MutableStateFlow(1)
     val searchCurrentPage: StateFlow<Int> = _searchCurrentPage.asStateFlow()
@@ -42,18 +44,18 @@ class NewsViewModel @Inject constructor(
     fun loadSearchPage(page: Int) {
         _searchCurrentPage.value = page
         viewModelScope.launch {
-            isLoading.value = true
+            _isLoading.value = true
             useCases.refreshSearchNews(query = _searchQuery.value.trim(), page = page)
-            isLoading.value = false
+            _isLoading.value = false
         }
     }
 
     fun loadCategoryPage(page: Int) {
         _categoryCurrentPage.value = page
         viewModelScope.launch {
-            isLoading.value = true
+            _isLoading.value = true
             useCases.refreshCategoryNews(category = _selectedCategory.value, page = page)
-            isLoading.value = false
+            _isLoading.value = false
         }
     }
 

@@ -17,7 +17,4 @@ interface NewsDao {
 
     @Query("DELETE FROM articles_table WHERE category = :categoryName")
     suspend fun clearArticlesByCategory(categoryName: String)
-
-    @Query("DELETE FROM articles_table")
-    suspend fun clearAllArticles()
 }

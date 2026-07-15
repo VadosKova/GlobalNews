@@ -66,7 +66,7 @@ class RefreshCategoryNewsUseCase @Inject constructor(
     }
 }
 
-data class NewsUseCases(
+class NewsUseCases @Inject constructor(
     val getSearchArticles: GetSearchArticlesUseCase,
     val getSortedCategoryArticles: GetSortedCategoryArticlesUseCase,
     val refreshSearchNews: RefreshSearchNewsUseCase,
